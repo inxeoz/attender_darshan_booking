@@ -9,6 +9,7 @@
     import type { Booking, Status } from "@src/appointment.js";
 
     import { Card, Button, Badge } from "flowbite-svelte";
+    import { slotTimeTo12hr } from "@src/utils.js";
 
     export let limitStart = 0;
     export let pageLength = 10;
@@ -108,7 +109,7 @@
                                 <div class="text-xs text-slate-400 mt-1">
                                     {b.darshan_date}@
 
-                                    {b.darshan_time}
+                                    {b.slot_start_time} to {b.slot_end_time}
                                 </div>
                             </div>
                             <div class="ml-4">
