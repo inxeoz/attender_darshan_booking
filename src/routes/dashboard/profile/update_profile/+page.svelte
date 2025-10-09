@@ -1,6 +1,6 @@
 <script lang="ts">
     import { goto } from "$app/navigation";
-    import { get_self_profile, update_profile } from "@src/helper_devoteee.js";
+    import { get_self_profile, update_profile } from "@src/helper_attender.js";
     import {
         Card,
         Avatar,
