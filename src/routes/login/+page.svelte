@@ -4,15 +4,19 @@
     import { Card, Button, Label, Input } from "flowbite-svelte";
     import { Badge } from "flowbite-svelte";
 
-    import { user_logged_in } from "@src/store.js";
+    import { user_logged_in , user_phone_number} from "@src/store.js";
 
     import { login_verify } from "@src/helper.js";
     import { toast } from "svelte-sonner";
+    import {get} from "svelte/store";
+    import LoadingPage from "@src/routes/LoadingPage.svelte";
+
+
 
     // phone as string to allow leading + / 0 etc
     export let phone = 0;
     let password: string = "Mpsedc123";
-    let loading: boolean = false;
+    let loading: boolean = true;
 
     async function login(e: SubmitEvent) {
         e?.preventDefault();
@@ -30,7 +34,18 @@
             loading = false;
         }
     }
+
+    onMount(()=> {
+        loading = true;
+        phone = get(user_phone_number)
+        loading = false;
+    })
 </script>
+
+{#if loading}
+<LoadingPage/>
+    {:else }
+
 
 <div class="min-h-screen flex items-center justify-center bg-gray-50 p-4">
     <Card class="w-full max-w-md p-10">
@@ -39,7 +54,7 @@
                 Login
             </h2>
 
-            <Badge color="indigo">Devoteee</Badge>
+            <Badge color="indigo">attender</Badge>
 
             <div>
                 <Label for="phone">Phone</Label>
@@ -77,3 +92,5 @@
         </form>
     </Card>
 </div>
+
+    {/if}

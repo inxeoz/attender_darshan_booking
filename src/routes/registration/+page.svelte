@@ -4,6 +4,8 @@
     import { Badge } from "flowbite-svelte";
 
     import { create_attender } from "@src/helper_attender.js";
+    import {user_phone_number} from "@src/store.js";
+
     import { toast } from "svelte-sonner";
 
     // phone as string to allow leading + / 0 etc
@@ -19,6 +21,7 @@
 
         if (json_data?.message) {
             toast.success("Registration Success");
+            user_phone_number.set(phone)
             await goto("/login");
         } else {
             // show API message or generic error

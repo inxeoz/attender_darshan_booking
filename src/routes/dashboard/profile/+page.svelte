@@ -46,14 +46,14 @@
         >
             <div class="flex flex-col items-center space-y-4">
                 <Avatar
-                    src={`https://ui-avatars.com/api/?name=${encodeURIComponent(profile.devoteee_name ?? profile.owner ?? "User")}&background=random`}
+                    src={`https://ui-avatars.com/api/?name=${encodeURIComponent(profile.attender_name ?? profile.owner ?? "User")}&background=random`}
                     alt="Avatar"
                     size="xl"
                     cornerStyle="rounded"
                 />
                 <div class="text-center">
                     <h2 class="text-2xl font-bold text-gray-800 mb-1">
-                        {profile.devoteee_name ?? profile.owner ?? profile.name}
+                        {profile.attender_name ?? profile.owner ?? profile.name}
                     </h2>
                     <p class="text-gray-500 text-sm">
                         {profile.doctype ?? "Darshan Devoteee Profile"}

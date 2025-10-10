@@ -32,7 +32,7 @@
         loading = true;
 
         const info = {
-            devoteee_name: name.trim(),
+            attender_name: name.trim(),
             gender,
             dob,
             address: address.trim(),
@@ -49,7 +49,7 @@
     onMount(async () => {
         profle_data = await get_self_profile();
 
-        name = profle_data?.devoteee_name ?? "";
+        name = profle_data?.attender_name ?? "";
         gender = profle_data?.gender ?? "";
         dob = profle_data?.dob ?? "";
         address = profle_data?.address ?? "";
@@ -198,7 +198,7 @@
                                     type="button"
                                     outline
                                     on:click={() => {
-                                        name = profle_data?.devoteee_name ?? "";
+                                        name = profle_data?.attender_name ?? "";
                                         gender = profle_data?.gender ?? "";
                                         dob = profle_data?.dob ?? "";
                                         address = profle_data?.address ?? "";
