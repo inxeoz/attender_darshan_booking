@@ -1,60 +1,44 @@
 <script lang="ts">
-    import { onMount } from "svelte";
     import { goto } from "$app/navigation";
     import { Card, Button, Label, Input } from "flowbite-svelte";
     import { Badge } from "flowbite-svelte";
 
-    import { user_logged_in , user_phone_number} from "@src/store.js";
+    import { create_attender } from "@src/helper_attender.js";
+    import {user_phone_number} from "@src/store.js";
 
-    import { login_verify } from "@src/helper.js";
     import { toast } from "svelte-sonner";
-    import {get} from "svelte/store";
-    import LoadingPage from "@src/routes/LoadingPage.svelte";
-
-
 
     // phone as string to allow leading + / 0 etc
-    export let phone = 0;
-    let password: string = "Mpsedc123";
-    let loading: boolean = true;
+    let phone: number;
+    let loading: boolean = false;
 
     async function login(e: SubmitEvent) {
         e?.preventDefault();
+
         loading = true;
 
-        const json_data = await login_verify(phone, password);
+        const json_data = await create_attender(phone);
 
-        if (json_data?.full_name) {
-            toast.success("Login successful");
-            await goto("/dashboard");
-            user_logged_in.set(true);
+        if (json_data?.message) {
+            toast.success("Registration Success");
+            user_phone_number.set(phone)
+            await goto("/login");
         } else {
             // show API message or generic error
-            toast.error(json_data || "Login failed");
+            toast.error(json_data || "Registration failed");
             loading = false;
         }
     }
-
-    onMount(()=> {
-        loading = true;
-        phone = get(user_phone_number)
-        loading = false;
-    })
 </script>
-
-{#if loading}
-<LoadingPage/>
-    {:else }
-
 
 <div class="min-h-screen flex items-center justify-center bg-gray-50 p-4">
     <Card class="w-full max-w-md p-10">
         <form class="space-y-4" on:submit={login} aria-busy={loading}>
             <h2 class="text-xl font-semibold text-gray-800 flex justify-center">
-                Login
+                Registration
             </h2>
 
-            <Badge color="indigo">attender</Badge>
+            <Badge color="indigo">Attender</Badge>
 
             <div>
                 <Label for="phone">Phone</Label>
@@ -62,20 +46,9 @@
                     id="phone"
                     type="text"
                     bind:value={phone}
-                    placeholder="Phone"
+                    placeholder="Enter your phone"
                     inputmode="tel"
                     autocomplete="tel"
-                />
-            </div>
-
-            <div>
-                <Label for="temp">Password</Label>
-                <Input
-                    id="temp"
-                    type="text"
-                    bind:value={password}
-                    placeholder="Enter password"
-                    disabled={loading}
                 />
             </div>
 
@@ -86,11 +59,9 @@
                     aria-disabled={loading}
                     class="min-lg:w-7xl"
                 >
-                    {#if loading}Verifying...{:else}Login{/if}
+                    {#if loading}Verifying...{:else}Register{/if}
                 </Button>
             </div>
         </form>
     </Card>
 </div>
-
-    {/if}

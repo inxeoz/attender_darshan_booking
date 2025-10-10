@@ -33,16 +33,15 @@ export function slotTimeTo24hr(slotLabel: string) {
   return `${h.toString().padStart(2, "0")}:${m}`;
 }
 
-export function slotTimeTo12hr(time24: string) {
-  // Handle invalid or empty input
-  if (!time24) return time24;
+export function slotTimeTo12hr(timeStr: string) {
+  // timeStr is something like "18:45:00" or "09:05:00"
+  const [hour, minute, second] = timeStr.split(":");
+  const date = new Date();
+  date.setHours(hour, minute, second || 0);
 
-  const [hStr, mStr = "00"] = time24.split(":");
-  let h = parseInt(hStr, 10);
-  const m = mStr.padStart(2, "0");
-
-  const meridian = h >= 12 ? "PM" : "AM";
-  h = h % 12 || 12; // convert 0 → 12, 13 → 1, etc.
-
-  return `${h}:${m} ${meridian}`;
+  return date.toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true,
+  });
 }

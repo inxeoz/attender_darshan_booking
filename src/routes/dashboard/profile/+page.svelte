@@ -1,7 +1,7 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import { Card, Avatar, Badge, Button } from "flowbite-svelte";
-    import { get_profile } from "@src/helper_devoteee.js";
+    import { get_self_profile } from "@src/helper_attender.js";
     import { goto } from "$app/navigation";
 
     let profile: any = null;
@@ -12,9 +12,7 @@
 
     onMount(async () => {
         try {
-            const response = await get_profile();
-            // defensive: check structure
-            profile = response?.message?.profile ?? null;
+            profile = await get_self_profile();
         } catch (e) {
             error = "Failed to load profile";
             console.error(e);
@@ -25,7 +23,7 @@
 
     function updateProfile() {
         // navigate to update page (keeps original behavior)
-        goto("/devoteee/profile/update_profile");
+        goto("/dashboard/profile/update_profile");
     }
 </script>
 
@@ -44,18 +42,18 @@
         </div>
     {:else if profile}
         <Card
-            class="w-full max-w-lg p-6 bg-white shadow-xl rounded-3xl transition-transform transform hover:scale-[1.02] hover:shadow-2xl"
+            class="card w-full max-w-lg p-6 bg-white shadow-xl rounded-3xl transition-transform transform hover:scale-[1.02] hover:shadow-2xl"
         >
             <div class="flex flex-col items-center space-y-4">
                 <Avatar
-                    src={`https://ui-avatars.com/api/?name=${encodeURIComponent(profile.devoteee_name ?? profile.owner ?? "User")}&background=random`}
+                    src={`https://ui-avatars.com/api/?name=${encodeURIComponent(profile.attender_name ?? profile.owner ?? "User")}&background=random`}
                     alt="Avatar"
                     size="xl"
                     cornerStyle="rounded"
                 />
                 <div class="text-center">
                     <h2 class="text-2xl font-bold text-gray-800 mb-1">
-                        {profile.devoteee_name ?? profile.owner ?? profile.name}
+                        {profile.attender_name ?? profile.owner ?? profile.name}
                     </h2>
                     <p class="text-gray-500 text-sm">
                         {profile.doctype ?? "Darshan Devoteee Profile"}
