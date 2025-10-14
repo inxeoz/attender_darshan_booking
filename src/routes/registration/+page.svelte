@@ -20,7 +20,7 @@
         const json_data = await create_attender(phone);
 
         if (json_data?.message) {
-            toast.success("Registration Success");
+            toast.success(JSON.stringify(json_data?.message));
             user_phone_number.set(phone)
             await goto("/login");
         } else {
