@@ -5,6 +5,18 @@ export interface Action {
   label: string;
 }
 
+export type ATTENDER_APPOINTMENT = {
+  appointment: string;
+  appointment_date: string;
+  appointment_type: string;
+  mark_exit: string;
+  name: string;
+  slot_end_time: string;
+  slot_start_time: string;
+  group_size: string;
+  primary_devoteee_name: string;
+};
+
 const defaultActions: Action[] = [
   { id: "viewBookings", label: "View Bookings" },
   { id: "bookShigra", label: "Book - Shigra Darshan" },

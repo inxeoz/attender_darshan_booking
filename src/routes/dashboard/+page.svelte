@@ -1,27 +1,16 @@
-<script>
+<script lang="ts">
+    import { onMount } from "svelte";
+    import { type ATTENDER_APPOINTMENT } from "@src/store.js";
+
+    import { get_attender_appointments_list } from "@src/helper_attender.js";
+    import { json } from "@sveltejs/kit";
+
     // mock data (replace with real API calls)
     let user = { name: "Suresh Kumar", id: 101 };
 
     let stats = { assigned: 1, exit: 0, attended: 0 };
 
-    let devotees = [
-        {
-            bookingId: 1002,
-            type: "VIP Darshan",
-            primary: "Sneha Patel",
-            date: "2025-09-30",
-            groupSize: 1,
-            notes: "Vegetarian, wheelchair assistance",
-        },
-        {
-            bookingId: 4001,
-            type: "VIP Darshan",
-            primary: "Ramesh Sharma",
-            date: "2025-10-15",
-            groupSize: 3,
-            notes: "Arriving in one vehicle",
-        },
-    ];
+    let devotees: ATTENDER_APPOINTMENT[] = [];
 
     // modal state
     let showModal = false;
@@ -53,6 +42,14 @@
         month: "long",
         day: "numeric",
     });
+
+    onMount(async () => {
+        const json_data = await get_attender_appointments_list(null);
+
+        if (json_data?.message) {
+            devotees = json_data?.message;
+        }
+    });
 </script>
 
 <div class="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -66,7 +63,7 @@
                 <p class="mt-2 text-sm text-slate-600">
                     Welcome back,
                     <span class="text-blue-600 font-semibold"
-                    >{user.name} (ID: {user.id})</span
+                        >{user.name} (ID: {user.id})</span
                     >. Here is your current devotee roster.
                 </p>
             </header>
@@ -88,17 +85,17 @@
                                 {stats.assigned}
                             </div>
                             <svg
-                                    class="w-6 h-6 text-slate-300"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    aria-hidden
+                                class="w-6 h-6 text-slate-300"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                aria-hidden
                             >
                                 <path
-                                        d="M12 4v16M4 12h16"
-                                        stroke="currentColor"
-                                        stroke-width="1.5"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
+                                    d="M12 4v16M4 12h16"
+                                    stroke="currentColor"
+                                    stroke-width="1.5"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
                                 />
                             </svg>
                         </div>
@@ -111,17 +108,17 @@
                                 {stats.exit}
                             </div>
                             <svg
-                                    class="w-6 h-6 text-green-200"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    aria-hidden
+                                class="w-6 h-6 text-green-200"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                aria-hidden
                             >
                                 <path
-                                        d="M5 13l4 4L19 7"
-                                        stroke="currentColor"
-                                        stroke-width="1.6"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
+                                    d="M5 13l4 4L19 7"
+                                    stroke="currentColor"
+                                    stroke-width="1.6"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
                                 />
                             </svg>
                         </div>
@@ -136,17 +133,17 @@
                                 {stats.attended}
                             </div>
                             <svg
-                                    class="w-6 h-6 text-slate-300"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    aria-hidden
+                                class="w-6 h-6 text-slate-300"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                aria-hidden
                             >
                                 <circle
-                                        cx="12"
-                                        cy="12"
-                                        r="9"
-                                        stroke="currentColor"
-                                        stroke-width="1.4"
+                                    cx="12"
+                                    cy="12"
+                                    r="9"
+                                    stroke="currentColor"
+                                    stroke-width="1.4"
                                 />
                             </svg>
                         </div>
@@ -162,7 +159,7 @@
                     <div class="bg-white rounded-lg shadow overflow-hidden">
                         <!-- table header -->
                         <div
-                                class="hidden md:grid grid-cols-6 gap-0 bg-slate-100 text-slate-700 text-sm font-semibold px-4 py-3 border-b"
+                            class="hidden md:grid grid-cols-6 gap-0 bg-slate-100 text-slate-700 text-sm font-semibold px-4 py-3 border-b"
                         >
                             <div class="col-span-1">Booking ID</div>
                             <div class="col-span-1">Darshan Type</div>
@@ -176,7 +173,7 @@
                         <div class="divide-y">
                             {#if devotees.length === 0}
                                 <div
-                                        class="px-6 py-8 text-center text-slate-500"
+                                    class="px-6 py-8 text-center text-slate-500"
                                 >
                                     No assigned devotees for today.
                                 </div>
@@ -184,44 +181,44 @@
 
                             {#each devotees as d}
                                 <div
-                                        class="grid grid-cols-1 md:grid-cols-6 items-center gap-3 px-4 py-4 md:px-6"
+                                    class="grid grid-cols-1 md:grid-cols-6 items-center gap-3 px-4 py-4 md:px-6"
                                 >
                                     <!-- Booking (mobile stacked view / clickable) -->
                                     <div class="col-span-1">
                                         <a
-                                                class="text-blue-600 font-semibold hover:underline"
-                                                href="#"
-                                                on:click|preventDefault={() =>
+                                            class="text-blue-600 font-semibold hover:underline"
+                                            href="#"
+                                            on:click|preventDefault={() =>
                                                 openDetails(d)}
                                         >
-                                            {d.bookingId}
+                                            {d.appointment}
                                         </a>
                                     </div>
 
                                     <div class="col-span-1 text-slate-700">
-                                        {d.type}
+                                        {d.appointment_type}
                                     </div>
 
                                     <div
-                                            class="col-span-2 font-semibold text-slate-800"
+                                        class="col-span-2 font-semibold text-slate-800"
                                     >
-                                        {d.primary}
+                                        {d.primary_devoteee_name}
                                     </div>
 
                                     <div class="col-span-1 text-slate-600">
-                                        {d.date}
+                                        {d.appointment_date}
                                     </div>
 
                                     <div class="col-span-1 text-slate-600">
-                                        {d.groupSize} Devotee(s)
+                                        {d.group_size} Devotee(s)
                                     </div>
 
                                     <div
-                                            class="col-span-full md:col-span-1 flex md:justify-end mt-3 md:mt-0"
+                                        class="col-span-full md:col-span-1 flex md:justify-end mt-3 md:mt-0"
                                     >
                                         <button
-                                                class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-full bg-blue-600 text-white hover:bg-blue-700 shadow-sm"
-                                                on:click={() => openDetails(d)}
+                                            class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-full bg-blue-600 text-white hover:bg-blue-700 shadow-sm"
+                                            on:click={() => openDetails(d)}
                                         >
                                             View Details
                                         </button>
@@ -233,8 +230,8 @@
 
                     <div class="mt-6">
                         <button
-                                class="px-4 py-2 rounded-lg bg-slate-400 text-white hover:bg-slate-500 shadow"
-                        >Logout</button
+                            class="px-4 py-2 rounded-lg bg-slate-400 text-white hover:bg-slate-500 shadow"
+                            >Logout</button
                         >
                     </div>
                 </section>
@@ -251,7 +248,7 @@
         <div class="relative w-full max-w-2xl mx-4">
             <div class="bg-white rounded-xl shadow-xl overflow-hidden">
                 <div
-                        class="px-6 py-4 border-b flex items-start justify-between"
+                    class="px-6 py-4 border-b flex items-start justify-between"
                 >
                     <div>
                         <h4 class="text-lg font-semibold text-slate-800">
@@ -262,17 +259,17 @@
                         </p>
                     </div>
                     <button
-                            class="text-slate-400 hover:text-slate-600"
-                            aria-label="Close"
-                            on:click={closeModal}
+                        class="text-slate-400 hover:text-slate-600"
+                        aria-label="Close"
+                        on:click={closeModal}
                     >
                         <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none">
                             <path
-                                    d="M6 18L18 6M6 6l12 12"
-                                    stroke="currentColor"
-                                    stroke-width="1.6"
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
+                                d="M6 18L18 6M6 6l12 12"
+                                stroke="currentColor"
+                                stroke-width="1.6"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
                             />
                         </svg>
                     </button>
@@ -304,18 +301,18 @@
                 </div>
 
                 <div
-                        class="px-6 py-4 bg-slate-50 flex items-center justify-end gap-3"
+                    class="px-6 py-4 bg-slate-50 flex items-center justify-end gap-3"
                 >
                     <button
-                            class="px-4 py-2 rounded-md bg-white border text-slate-700 hover:bg-slate-100"
-                            on:click={closeModal}
+                        class="px-4 py-2 rounded-md bg-white border text-slate-700 hover:bg-slate-100"
+                        on:click={closeModal}
                     >
                         Close
                     </button>
 
                     <button
-                            class="px-4 py-2 rounded-md bg-green-600 text-white hover:bg-green-700"
-                            on:click={() => markExit(current.bookingId)}
+                        class="px-4 py-2 rounded-md bg-green-600 text-white hover:bg-green-700"
+                        on:click={() => markExit(current.bookingId)}
                     >
                         Mark Exit
                     </button>
