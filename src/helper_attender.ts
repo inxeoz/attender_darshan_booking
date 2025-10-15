@@ -108,3 +108,22 @@ export async function get_attender_appointments_list(
     return null;
   }
 }
+
+export async function get_appointment_stats() {
+  try {
+    const res = await fetch(COMMON + "get_appointment_stats", {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    const data = await res.json();
+    return data;
+  } catch (err: any) {
+    console.error(err);
+
+    return null;
+  }
+}

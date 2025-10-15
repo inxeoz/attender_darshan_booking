@@ -2,7 +2,13 @@
     import { onMount } from "svelte";
     import type { ATTENDER_APPOINTMENT } from "@src/store.js";
     import BookingModal from "@src/routes/BookingModal.svelte";
-    import { get_attender_appointments_list } from "@src/helper_attender.js";
+    import {
+        get_attender_appointments_list,
+        get_appointment_stats,
+    } from "@src/helper_attender.js";
+
+    let marked_exit_schedules = 0;
+    let total_schedules = 0;
 
     let user = { name: "Suresh Kumar", id: 101 };
     let stats = { assigned: 0, exit: 0, attended: 0 };
@@ -37,9 +43,17 @@
 
     onMount(async () => {
         const json_data = await get_attender_appointments_list(null);
+        const stats_json_data = await get_appointment_stats(null);
+
         if (json_data?.message) {
             devotees = json_data.message;
             stats.assigned = devotees.length;
+        }
+
+        if (stats_json_data?.message) {
+            total_schedules = stats_json_data.message.total_schedules;
+            marked_exit_schedules =
+                stats_json_data.message.marked_exit_schedules;
         }
     });
 </script>
@@ -72,7 +86,7 @@
                         </div>
                         <div class="mt-3 flex items-center justify-between">
                             <div class="text-3xl font-extrabold text-blue-600">
-                                {stats.assigned}
+                                {total_schedules - marked_exit_schedules}
                             </div>
                         </div>
                     </div>
@@ -81,7 +95,7 @@
                         <div class="text-sm text-slate-500">Exit Today</div>
                         <div class="mt-3 flex items-center justify-between">
                             <div class="text-3xl font-extrabold text-green-600">
-                                {stats.exit}
+                                {marked_exit_schedules}
                             </div>
                         </div>
                     </div>
@@ -92,7 +106,7 @@
                         </div>
                         <div class="mt-3 flex items-center justify-between">
                             <div class="text-3xl font-extrabold text-slate-800">
-                                {stats.attended}
+                                {total_schedules}
                             </div>
                         </div>
                     </div>
