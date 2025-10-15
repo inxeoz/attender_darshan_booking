@@ -13,13 +13,14 @@
     export let appointmentId: string;
 
     export let showModal = false;
-    let currentBooking: ATTENDER_APPOINTMENT;
+    export let currentBooking: ATTENDER_APPOINTMENT;
+    let companionList = []; // To hold companions list
 
-    async function fetchAppointment() {
-        const json_data = await get_attender_appointment(appointmentId);
-
+    async function fetchCompanionList() {
+        const json_data =
+            await get_attender_appointment_companion_list(appointmentId);
         if (json_data.message) {
-            currentBooking = json_data.message;
+            companionList = json_data.message; // Assuming message is an array of companions
         }
     }
 
@@ -30,9 +31,9 @@
     };
 
     onMount(async () => {
-        fetchAppointment();
-        await get_attender_appointment_companion_list(appointmentId);
-        window.addEventListener("keydown", onKeydown);
+        console.log(currentBooking);
+        await fetchCompanionList();
+        // window.addEventListener("keydown", onkeydown);
     });
 </script>
 
@@ -110,6 +111,57 @@
                 </dd>
             </div>
         </div>
+    </div>
+
+    <div class="sm:col-span-2">
+        <dt class="text-xs text-slate-500 uppercase tracking-wide mb-2">
+            Companions
+        </dt>
+        <dd class="text-slate-700 mt-1">
+            {#if companionList.length > 0}
+                <div class="grid gap-4 grid-cols-1 md:grid-cols-2">
+                    {#each companionList as companion}
+                        <div
+                            class="border rounded-lg p-4 flex items-center gap-4 bg-slate-50 shadow-sm hover:shadow-md transition-shadow duration-200"
+                        >
+                            <!-- Badge for name -->
+                            <div
+                                class="bg-blue-100 text-blue-800 text-xs font-semibold rounded px-2 py-1"
+                            >
+                                {companion.companion_name}
+                            </div>
+                            <!-- Details -->
+                            <div class="flex-1 space-y-1 text-sm">
+                                <div class="flex items-center space-x-2">
+                                    <span class="font-semibold">Gender:</span>
+                                    <span class="badge"
+                                        >{companion.companion_gender}</span
+                                    >
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <span class="font-semibold">Age:</span>
+                                    <span
+                                        >{companion.companion_age ||
+                                            "N/A"}</span
+                                    >
+                                </div>
+                                {#if companion.companion_phone}
+                                    <div class="flex items-center space-x-2">
+                                        <span class="font-semibold">Phone:</span
+                                        >
+                                        <span>{companion.companion_phone}</span>
+                                    </div>
+                                {/if}
+                            </div>
+                        </div>
+                    {/each}
+                </div>
+            {:else}
+                <p class="text-sm text-slate-500 italic">
+                    No companions found.
+                </p>
+            {/if}
+        </dd>
     </div>
 
     <!-- Footer -->

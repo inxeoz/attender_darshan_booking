@@ -182,6 +182,7 @@
         bind:showModal
         on:markExit={(e) => handleMarkExit(e.detail)}
         on:close={closeModal}
+        {currentBooking}
         appointmentId={currentBooking.appointment}
     />
 {/if}
