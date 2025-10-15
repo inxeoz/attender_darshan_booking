@@ -19,6 +19,7 @@
 
     function openModal(booking: ATTENDER_APPOINTMENT) {
         currentBooking = booking;
+
         showModal = true;
     }
 
@@ -43,7 +44,7 @@
 
     onMount(async () => {
         const json_data = await get_attender_appointments_list(null);
-        const stats_json_data = await get_appointment_stats(null);
+        const stats_json_data = await get_appointment_stats();
 
         if (json_data?.message) {
             devotees = json_data.message;
@@ -177,9 +178,10 @@
     </div>
 </div>
 
-<BookingModal
-    bind:showModal
-    {currentBooking}
-    on:markExit={(e) => handleMarkExit(e.detail)}
-    on:close={closeModal}
-/>
+{#if showModal}<BookingModal
+        bind:showModal
+        on:markExit={(e) => handleMarkExit(e.detail)}
+        on:close={closeModal}
+        appointmentId={currentBooking.appointment}
+    />
+{/if}

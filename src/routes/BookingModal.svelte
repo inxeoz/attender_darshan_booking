@@ -1,10 +1,23 @@
 <script lang="ts">
     import type { ATTENDER_APPOINTMENT } from "@src/store.js";
     import { Modal, Button } from "flowbite-svelte";
-    import { createEventDispatcher } from "svelte";
+    import { createEventDispatcher, onMount } from "svelte";
+
+    import { get_attender_appointment } from "@src/helper_attender.js";
+    import { json } from "@sveltejs/kit";
+
+    export let appointmentId: string;
 
     export let showModal = false;
-    export let currentBooking: ATTENDER_APPOINTMENT;
+    let currentBooking: ATTENDER_APPOINTMENT;
+
+    async function fetchAppointment() {
+        const json_data = await get_attender_appointment(appointmentId);
+
+        if (json_data.message) {
+            currentBooking = json_data.message;
+        }
+    }
 
     const dispatch = createEventDispatcher();
 
@@ -15,6 +28,11 @@
     const markExit = (id) => {
         dispatch("markExit", id);
     };
+
+    onMount(() => {
+        fetchAppointment();
+        window.addEventListener("keydown", onKeydown);
+    });
 </script>
 
 <Modal bind:open={showModal} size="xl" autoclose>
