@@ -173,7 +173,7 @@
         >
         <Button
             color="green"
-            on:click={async () => await mark_exit(currentBooking?.appointment)}
+            onclick={async () => await mark_exit(currentBooking?.appointment)}
             class="w-full sm:w-auto"
         >
             Mark Exit
