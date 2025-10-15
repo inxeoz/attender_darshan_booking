@@ -9,7 +9,7 @@ export type ATTENDER_APPOINTMENT = {
   appointment: string;
   appointment_date: string;
   appointment_type: string;
-  mark_exit: string;
+  mark_exit: number;
   name: string;
   slot_end_time: string;
   slot_start_time: string;

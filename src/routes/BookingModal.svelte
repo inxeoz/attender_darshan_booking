@@ -3,7 +3,11 @@
     import { Modal, Button } from "flowbite-svelte";
     import { createEventDispatcher, onMount } from "svelte";
 
-    import { get_attender_appointment } from "@src/helper_attender.js";
+    import {
+        get_attender_appointment,
+        get_attender_appointment_companion_list,
+        mark_exit,
+    } from "@src/helper_attender.js";
     import { json } from "@sveltejs/kit";
 
     export let appointmentId: string;
@@ -25,12 +29,9 @@
         dispatch("close");
     };
 
-    const markExit = (id) => {
-        dispatch("markExit", id);
-    };
-
-    onMount(() => {
+    onMount(async () => {
         fetchAppointment();
+        await get_attender_appointment_companion_list(appointmentId);
         window.addEventListener("keydown", onKeydown);
     });
 </script>
@@ -120,7 +121,7 @@
         >
         <Button
             color="green"
-            on:click={() => markExit(currentBooking?.appointment)}
+            on:click={async () => await mark_exit(currentBooking?.appointment)}
             class="w-full sm:w-auto"
         >
             Mark Exit
