@@ -28,3 +28,6 @@ const defaultActions: Action[] = [
 export const actionsStore = writable<Action[]>(defaultActions);
 export const user_logged_in = writable(false);
 export const user_phone_number = writable(0);
+export const auth_token = writable("")
+
+

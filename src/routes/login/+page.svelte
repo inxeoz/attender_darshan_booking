@@ -6,7 +6,7 @@
 
     import { user_logged_in , user_phone_number} from "@src/store.js";
 
-    import { login_verify } from "@src/helper.js";
+    import { get_auth_token, login_verify } from "@src/helper.js";
     import { toast } from "svelte-sonner";
     import {get} from "svelte/store";
     import LoadingPage from "@src/routes/LoadingPage.svelte";
@@ -22,15 +22,14 @@
         e?.preventDefault();
         loading = true;
 
-        const json_data = await login_verify(phone, password);
+        const json_data = await get_auth_token(phone);
 
-        if (json_data?.full_name) {
+        if (json_data?.message) {
             toast.success("Login successful");
             await goto("/dashboard");
             user_logged_in.set(true);
         } else {
-            // show API message or generic error
-            toast.error(json_data || "Login failed");
+            toast.error("Login failed " + JSON.stringify(json_data));
             loading = false;
         }
     }
